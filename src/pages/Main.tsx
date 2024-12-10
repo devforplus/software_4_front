@@ -20,7 +20,7 @@ function Main() {
   const [selectedEvent, setSelectedEvent] = useState<MyCalendarEvent | null>(
     null
   ); // 이름 변경
-
+  const userid = localStorage.getItem("userid");
   useEffect(() => {
     console.log(selectedDate);
   }, [selectedDate]);
@@ -67,6 +67,7 @@ function Main() {
         const response = await axios.post(
           "http://localhost:4000/registerDate",
           {
+            user: localStorage.getItem("userid"),
             id: newEvent.id,
             title: newEvent.title,
             date: newEvent.date,
@@ -135,6 +136,26 @@ function Main() {
       }
     }
   };
+
+  const fetchData = async (userid: string | null) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/events/${userid}`
+      );
+      if (response.status === 200) {
+        setEvents(response.data); // 서버에서 가져온 데이터를 상태에 설정
+      } else {
+        console.error("Failed to fetch events");
+      }
+    } catch (error) {
+      console.error("Error fetching events: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(userid);
+  });
+
   return (
     <div className="flex items-center justify-center h-screen pt-4">
       <div className="flex w-4/5">
