@@ -20,6 +20,7 @@ const Login = () => {
       );
       if (response.data.ok === true) {
         alert("로그인이 완료되었습니다!");
+        localStorage.setItem("userid", response.data.user.ID);
         navigate("/Main"); // 로그인 성공 시 메인 페이지로 이동
       } else {
         alert("로그인에 실패했습니다.");
